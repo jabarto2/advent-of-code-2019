@@ -50,7 +50,7 @@ public:
 
 int main()
 {
-  std::string input_file = "/home/joe/projects/advent-of-code/2019/day2/input/intcode.txt";
+  std::string input_file = "/home/joe/projects/advent-of-code-2019/day2/input/intcode.txt";
   std::ifstream file;
   file.open(input_file.c_str());
 
