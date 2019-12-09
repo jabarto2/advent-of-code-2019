@@ -99,7 +99,5 @@ int main()
   std::cout << "With the new rules, there are " << possible_passwords << " possible passwords between the values of "
             << lower_password_bound << " and " << upper_password_bound << std::endl;
 
-  std::cout << numberContainsAnExactPairOfEquivalentAdjacentDigits(112233) << std::endl;
-
   return 0;
 }
