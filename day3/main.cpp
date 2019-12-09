@@ -8,6 +8,23 @@
 #include <sstream>
 #include <limits>
 
+std::vector<Segment> getSegmentsFromWireStream(std::stringstream& wire_stream,
+                                               const Point& starting_point = Point(0, 0))
+{
+  Point previous_point = starting_point;
+  std::vector<Segment> wire_segments;
+
+  std::string movement;
+  while (std::getline(wire_stream, movement, ','))
+  {
+    Segment new_segment(previous_point, movement);
+    wire_segments.push_back(new_segment);
+    previous_point = new_segment.end_point;
+  }
+
+  return wire_segments;
+}
+
 int main()
 {
   Point origin(0, 0);
@@ -72,21 +89,4 @@ int main()
   std::cout << "The closest intersection when measuring distance along both wires is a combined "
             << shortest_combined_distance_to_intersection << " steps from the origin" << std::endl;
   return 0;
-}
-
-std::vector<Segment> getSegmentsFromWireStream(std::stringstream& wire_stream,
-                                               const Point& starting_point = Point(0, 0))
-{
-  Point previous_point = starting_point;
-  std::vector<Segment> wire_segments;
-
-  std::string movement;
-  while (std::getline(wire_stream, movement, ','))
-  {
-    Segment new_segment(previous_point, movement);
-    wire_segments.push_back(new_segment);
-    previous_point = new_segment.end_point;
-  }
-
-  return wire_segments;
 }
