@@ -13,6 +13,8 @@ public:
   void executeProgram();
 
 private:
+  int getInstructionParameter(int index, int parameter_mode);
+
   std::vector<int> original_program_memory_;
   std::vector<int> program_memory_;
 };
