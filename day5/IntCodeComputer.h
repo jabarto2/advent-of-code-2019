@@ -2,6 +2,7 @@
 #define INTCODECOMPUTER_H_
 
 #include <vector>
+#include <deque>
 
 class IntCodeComputer
 {
@@ -10,7 +11,7 @@ public:
 
   void resetProgramMemory();
 
-  void executeProgram();
+  void executeProgram(std::deque<int>& inputs, std::deque<int>& outputs);
 
 private:
   int getInstructionParameter(int index, int parameter_mode);

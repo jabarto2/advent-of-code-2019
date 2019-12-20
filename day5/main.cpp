@@ -20,7 +20,29 @@ int main()
 
   IntCodeComputer computer(code);
 
-  computer.executeProgram();
+  // Part 1
+  std::deque<int> inputs, outputs;
+  inputs.push_front(1);
+  computer.executeProgram(inputs, outputs);
+
+  for (auto& output : outputs)
+  {
+    std::cout << outputs.front() << std::endl;
+    outputs.pop_front();
+  }
+
+  // Part 2
+  computer.resetProgramMemory();
+  inputs.clear();
+  outputs.clear();
+  inputs.push_front(5);
+  computer.executeProgram(inputs, outputs);
+
+  for (auto& output : outputs)
+  {
+    std::cout << outputs.front() << std::endl;
+    outputs.pop_front();
+  }
 
   return 0;
 }

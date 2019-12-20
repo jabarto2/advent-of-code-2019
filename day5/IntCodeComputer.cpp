@@ -2,6 +2,7 @@
 #include "Instruction.h"
 
 #include <iostream>
+#include <thread>
 
 IntCodeComputer::IntCodeComputer(std::vector<int> program_memory)
 {
@@ -14,7 +15,7 @@ void IntCodeComputer::resetProgramMemory()
   program_memory_ = original_program_memory_;
 }
 
-void IntCodeComputer::executeProgram()
+void IntCodeComputer::executeProgram(std::deque<int>& inputs, std::deque<int>& outputs)
 {
   for (int i = 0; i < program_memory_.size();)
   {
@@ -45,9 +46,13 @@ void IntCodeComputer::executeProgram()
     else if (instruction.opcode == 3)
     {
       // take input and store at the operand address
-      int input;
-      std::cout << "Please provide an input to the program: ";
-      std::cin >> input;
+      while (inputs.empty())
+      {
+        std::cout << "Sleeping while waiting for input" << std::endl;
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+      }
+      int input = inputs.front();
+      inputs.pop_front();
       program_memory_[program_memory_[i + 1]] = input;
       i += 2;
     }
@@ -56,8 +61,7 @@ void IntCodeComputer::executeProgram()
       // output the value at the operand address
       int output = getInstructionParameter(i + 1, instruction.parameter_modes.at(0));
 
-      std::cout << output << std::endl;
-      ;
+      outputs.push_back(output);
       i += 2;
     }
     else if (instruction.opcode == 5)
