@@ -15,43 +15,43 @@ int runSimpleAmplifierCircuit(std::vector<int> phase_settings, std::vector<std::
 
   std::deque<int> inputs, outputs;
 
-  std::cout << "Amplifier outputs: ";
   for (int i = 0; i < amplifiers.size(); ++i)
   {
     inputs.push_back(phase_settings.at(i));
     inputs.push_back(amplifier_output);
     amplifiers.at(i)->executeProgram(inputs, outputs);
-    std::cout << outputs.back() << ", ";
     amplifier_output = outputs.back();
     outputs.clear();
   }
-  std::cout << std::endl;
   return amplifier_output;
 }
 
 int runFeedbackLoopAmplifierCircuit(std::vector<int> phase_settings,
                                     std::vector<std::shared_ptr<IntCodeComputer>> amplifiers)
 {
-  int amplifier_output = 0;
+  int initial_input = 0;
 
-  std::deque<int> inputs, outputs;
-
-  std::cout << "Amplifier outputs: ";
+  std::vector<std::deque<int>> inputs;
   for (int i = 0; i < amplifiers.size(); ++i)
   {
-    inputs.push_back(phase_settings.at(i));
-    inputs.push_back(amplifier_output);
-
-    std::thread t(&IntCodeComputer::executeProgram, amplifiers.at(i), inputs, outputs);
-
-    amplifiers.at(i)->executeProgram(inputs, outputs);
-
-    std::cout << outputs.back() << ", ";
-    amplifier_output = outputs.back();
-    outputs.clear();
+    inputs.push_back({});
+    inputs.at(i).push_back(phase_settings.at(i));
   }
-  std::cout << std::endl;
-  return amplifier_output;
+  inputs.front().push_back(initial_input);
+
+  std::vector<std::thread> threads;
+
+  for (int i = 0; i < amplifiers.size(); ++i)
+  {
+    std::thread t(&IntCodeComputer::executeProgram, amplifiers.at(i), std::ref(inputs.at(i)),
+                  std::ref(inputs.at((i + 1) % amplifiers.size())));
+    threads.push_back(std::move(t));
+  }
+
+  for (auto& thread : threads)
+    thread.join();
+
+  return inputs.front().front();
 }
 
 int main()
@@ -91,8 +91,7 @@ int main()
       largest_amplifier_output = amplifier_output;
   }
 
-  std::cout << std::endl
-            << "The largest amplifier output in the simple configuration was " << largest_amplifier_output << std::endl
+  std::cout << "The largest amplifier output in the simple configuration was " << largest_amplifier_output << std::endl
             << std::endl;
 
   for (auto& amplifier : amplifiers)
@@ -109,12 +108,16 @@ int main()
     phase_setting_permutations.push_back(phase_settings);
   } while (std::next_permutation(phase_settings.begin(), phase_settings.end()));
 
+  largest_amplifier_output = 0;
   for (auto& permutation : phase_setting_permutations)
   {
     int amplifier_output = runFeedbackLoopAmplifierCircuit(permutation, amplifiers);
     if (amplifier_output > largest_amplifier_output)
       largest_amplifier_output = amplifier_output;
   }
+
+  std::cout << "The largest amplifier output in the feedback loop configuration was " << largest_amplifier_output
+            << std::endl;
 
   return 0;
 }

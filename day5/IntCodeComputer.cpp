@@ -48,9 +48,9 @@ void IntCodeComputer::executeProgram(std::deque<int>& inputs, std::deque<int>& o
       // take input and store at the operand address
       while (inputs.empty())
       {
-        std::cout << "Sleeping while waiting for input" << std::endl;
-        std::this_thread::sleep_for(std::chrono::seconds(1));
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
       }
+
       int input = inputs.front();
       inputs.pop_front();
       program_memory_[program_memory_[i + 1]] = input;
