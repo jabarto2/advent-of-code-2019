@@ -11,17 +11,17 @@ int main()
   std::ifstream file;
   file.open(input_file.c_str());
 
-  std::vector<int> code;
+  std::vector<long> code;
   std::string word;
   while (std::getline(file, word, ','))
   {
-    code.push_back(std::stoi(word));
+    code.push_back(std::stol(word));
   }
 
   IntCodeComputer computer(code);
 
   // Part 1
-  std::deque<int> inputs, outputs;
+  std::deque<long> inputs, outputs;
   inputs.push_front(1);
   computer.executeProgram(inputs, outputs);
 

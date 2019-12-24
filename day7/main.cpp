@@ -13,7 +13,7 @@ int runSimpleAmplifierCircuit(std::vector<int> phase_settings, std::vector<std::
 {
   int amplifier_output = 0;
 
-  std::deque<int> inputs, outputs;
+  std::deque<long> inputs, outputs;
 
   for (int i = 0; i < amplifiers.size(); ++i)
   {
@@ -31,7 +31,7 @@ int runFeedbackLoopAmplifierCircuit(std::vector<int> phase_settings,
 {
   int initial_input = 0;
 
-  std::vector<std::deque<int>> inputs;
+  std::vector<std::deque<long>> inputs;
   for (int i = 0; i < amplifiers.size(); ++i)
   {
     inputs.push_back({});
@@ -60,11 +60,11 @@ int main()
   std::ifstream file;
   file.open(input_file.c_str());
 
-  std::vector<int> code;
+  std::vector<long> code;
   std::string word;
   while (std::getline(file, word, ','))
   {
-    code.push_back(std::stoi(word));
+    code.push_back(std::stol(word));
   }
 
   // Part 1
