@@ -44,6 +44,27 @@ public:
     return layer;
   }
 
+  std::vector<std::vector<int>> decodeImage()
+  {
+    std::vector<std::vector<int>> decoded_image;
+    for (auto& column : pixels_)
+    {
+      std::vector<int> decoded_column;
+      for (auto& row : column)
+      {
+        for (auto& layer : row.layers)
+        {
+          if (layer == 2)  // transparent layers are ignored
+            continue;
+          decoded_column.push_back(layer);
+          break;
+        }
+      }
+      decoded_image.push_back(decoded_column);
+    }
+    return decoded_image;
+  }
+
 private:
   std::vector<std::vector<Pixel>> pixels_;
 };
@@ -70,10 +91,12 @@ int main()
 
   std::string row;
   int row_number = 0;
-  while (file.good())
+  while (true)
   {
     row.resize(image_dimensions.first);
     file.read(&row[0], image_dimensions.first);
+    if (!file.good())
+      break;
     for (int column_number = 0; column_number < image_dimensions.first; ++column_number)
     {
       int layer_value = row.at(column_number) - '0';
@@ -103,5 +126,20 @@ int main()
   std::cout << "The layer with the fewest 0's has a value of " << return_value
             << " when the number of 1's is multiplied by the number of 2's" << std::endl;
 
+  // Part 2
+  std::vector<std::vector<int>> decoded_image = image.decodeImage();
+  char black = 32;
+  char white = 35;
+  for (int y = 0; y < image_dimensions.second; ++y)
+  {
+    for (int x = 0; x < image_dimensions.first; ++x)
+    {
+      if (decoded_image[x][y] == 0)
+        std::cout << black;
+      else if (decoded_image[x][y] == 1)
+        std::cout << white;
+    }
+    std::cout << std::endl;
+  }
   return 0;
 }
