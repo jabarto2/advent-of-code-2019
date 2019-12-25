@@ -13,6 +13,7 @@ IntCodeComputer::IntCodeComputer(std::vector<long> program_memory)
 void IntCodeComputer::resetProgramMemory()
 {
   program_memory_ = original_program_memory_;
+  relative_base_offset_ = 0;
 }
 
 void IntCodeComputer::executeProgram(std::deque<long>& inputs, std::deque<long>& outputs)

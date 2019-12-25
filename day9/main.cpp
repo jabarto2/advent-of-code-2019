@@ -23,8 +23,22 @@ int main()
 
   IntCodeComputer computer(code);
   std::deque<long> input, output;
+
+  // Part 1
   input.push_back(1);
   computer.executeProgram(input, output);
+  for (auto& out : output)
+  {
+    std::cout << out << std::endl;
+  }
+
+  // Part 2
+  computer.resetProgramMemory();
+  input.clear();
+  input.push_back(2);
+  output.clear();
+  computer.executeProgram(input, output);
+  std::cout << std::endl;
   for (auto& out : output)
   {
     std::cout << out << std::endl;
